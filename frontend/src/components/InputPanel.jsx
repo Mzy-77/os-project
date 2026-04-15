@@ -4,10 +4,10 @@ export default function InputPanel({ onRunSimulation }) {
     const [processes, setProcesses] = useState([]);
 
     const addProcess = () => {
-        setProcesses([
-            ...processes,
+        setProcesses(prev => [
+            ...prev,
             {
-                id: processes.length + 1,
+                id: prev.length + 1,
                 arrival: 0,
                 burst: 1,
                 priority: 1
@@ -16,17 +16,22 @@ export default function InputPanel({ onRunSimulation }) {
     };
 
     const update = (index, field, value) => {
-        const copy = [...processes];
-        copy[index][field] = Number(value);
-        setProcesses(copy);
+        setProcesses(prev => {
+            const copy = [...prev];
+            copy[index] = {
+                ...copy[index],
+                [field]: Number(value)
+            };
+            return copy;
+        });
     };
 
     return (
-        <div>
+        <div className="input-panel">
             <button onClick={addProcess}>Add Process</button>
 
             {processes.map((p, i) => (
-                <div key={i}>
+                <div key={p.id}>
                     <span>Process {p.id}</span>
 
                     <input
@@ -40,13 +45,15 @@ export default function InputPanel({ onRunSimulation }) {
                     />
 
                     <input
+
                         placeholder="Priority"
+
                         onChange={(e) => update(i, "priority", e.target.value)}
                     />
                 </div>
             ))}
 
-            <button onClick={() => onRunSimulation(processes)}>
+            <button className="simBtn" onClick={() => onRunSimulation(processes)}>
                 Run Simulation
             </button>
         </div>

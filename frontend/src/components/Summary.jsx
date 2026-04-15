@@ -4,7 +4,7 @@ export default function ComparisonSummary({ priorityData, srtfData }) {
         arr.reduce((sum, item) => sum + item[key], 0) / arr.length;
 
     return (
-        <div>
+        <div className="summary">
             <h2>Comparison Summary</h2>
 
             <p>Average Waiting Time (Priority): {avg(priorityData.results, "waiting")}</p>

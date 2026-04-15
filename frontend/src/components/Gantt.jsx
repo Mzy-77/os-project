@@ -1,6 +1,6 @@
 export default function GanttChart({ data }) {
     return (
-        <div>
+        <div className="ganttChart">
             {data.map((id, i) => (
                 <span key={i}>
                     P{id} |
