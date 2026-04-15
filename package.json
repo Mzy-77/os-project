@@ -1,0 +1,15 @@
+{
+  "name": "os-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend/index.js",
+  "scripts": {
+    "ser": "nodemon  backend/index.js"
+  },
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  }
+}
