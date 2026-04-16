@@ -41,7 +41,8 @@ h1{
     border-radius: 10px;
 }
 .input-panel button{
-    width: 100%;
+    
+    background-color: #b9b97d;
     padding: 5px;
     margin: 5px;
     border-radius: 10px;
@@ -62,17 +63,31 @@ h1{
     margin: 5px;
 
 }
-table{
-    width: 100%;
+.results-table{
+    overflow: hidden;
+    max-width: 90%;
     color: white;
-    border-color: #b9b97d;
+    justify-content: center;
     align-items: center;
     border-collapse: collapse;
     margin: 5px 0 ;
+}
+.results-table table{
+    border-color: #b9b97d;
+    color: #ffffff;
+    width: 100%;
 }
 h2{
     font-family: "Rubik", cursive;
     color: #ffffff;
     font-size: 1.75rem;
     text-align: center;
+}
+.resetBtn{
+    width: 4rem;
+    background-color: #b9b97d;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
+    font-weight: bold;
 }
