@@ -6,6 +6,38 @@ const application = express();
 application.use(cors());
 application.use(express.json());
 
+application.post("/simulate", (req, res) => {
+
+    const processList = req.body.processes;
+
+    if (!Array.isArray(processList)) {
+        return res.status(400).json({ error: "Invalid input" });
+    }
+
+    for (let p of processList) {
+        if (p.arrival < 0 || p.burst <= 0 || p.priority < 1) {
+            return res.status(400).json({ error: "Invalid process data" });
+        }
+    }
+
+    const priorityResult = priorityScheduling(
+        JSON.parse(JSON.stringify(processList))
+    );
+
+    const srtfResult = srtf(
+        JSON.parse(JSON.stringify(processList))
+    );
+
+    res.json({
+        priority: priorityResult,
+        srtf: srtfResult
+    });
+});
+
+application.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
+
 function priorityScheduling(processList) {
     const totalProcesses = processList.length;
 
@@ -139,35 +171,3 @@ function srtf(processList) {
 
     return { timeline, results };
 }
-
-application.post("/simulate", (req, res) => {
-
-    const processList = req.body.processes;
-
-    if (!Array.isArray(processList)) {
-        return res.status(400).json({ error: "Invalid input" });
-    }
-
-    for (let p of processList) {
-        if (p.arrival < 0 || p.burst <= 0 || p.priority < 1) {
-            return res.status(400).json({ error: "Invalid process data" });
-        }
-    }
-
-    const priorityResult = priorityScheduling(
-        JSON.parse(JSON.stringify(processList))
-    );
-
-    const srtfResult = srtf(
-        JSON.parse(JSON.stringify(processList))
-    );
-
-    res.json({
-        priority: priorityResult,
-        srtf: srtfResult
-    });
-});
-
-application.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
