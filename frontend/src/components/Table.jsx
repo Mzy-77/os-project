@@ -1,5 +1,6 @@
 export default function ResultsTable({ data }) {
     return (
+        <div className="results-table">
         <table border="1">
             <thead>
             <tr>
@@ -25,5 +26,6 @@ export default function ResultsTable({ data }) {
             ))}
             </tbody>
         </table>
+        </div>
     );
 }
