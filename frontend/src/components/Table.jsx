@@ -1,4 +1,4 @@
-import { getColor } from "../utils/colors";
+import { getColor } from "./utils/colors";
 
 export default function ResultsTable({ results, allIds, avgWT, avgTAT, avgRT }) {
     return (

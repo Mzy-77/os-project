@@ -1,5 +1,6 @@
-import GanttChart from "./GanttChart";
-import ResultsTable from "./ResultsTable";
+import GanttChart from "./Gantt.jsx";
+import ResultsTable from "./Table.jsx";
+
 
 export default function ResultsPanel({ result, activeTab, onTabChange, allIds, totalTime }) {
   const cur = activeTab === "priority" ? result.priority : result.srtf;

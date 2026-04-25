@@ -1,4 +1,4 @@
-import { getColor } from "../utils/colors";
+import { getColor } from "./utils/colors";
 
 export default function InputPanel({
     processes,
@@ -70,7 +70,7 @@ export default function InputPanel({
                 onClick={onSimulate}
                 disabled={loading || processes.length === 0}
             >
-                {loading ? "SIMULATING..." : "▶ RUN SIMULATION"}
+                {loading ? "SIMULATING..." : " RUN SIMULATION"}
             </button>
         </div>
     );

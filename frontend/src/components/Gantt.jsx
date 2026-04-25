@@ -1,4 +1,4 @@
-import { getColor } from "../utils/colors";
+import { getColor } from "./utils/colors.js"
 
 export default function GanttChart({ timeline, preemptions, allIds, totalTime }) {
     const preemptSet = new Set(preemptions.map(p => p.at));

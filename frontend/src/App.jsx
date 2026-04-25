@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "./index.css";
-import Header from "./components/Header";
+import Header from "./components/header";
 import ScenarioBar from "./components/ScenarioBar";
-import InputPanel from "./components/InputPanel";
-import ResultsPanel from "./components/ResultsPanel";
-import ComparisonSummary from "./components/ComparisonSummary";
-import { SCENARIOS } from "./utils/scenarios";
+import ComparisonSummary from "./components/Summary.jsx";
+import ResultsPanel from "./components/ResultsPanel.jsx";
+import InputPanel from "./components/InputPanel.jsx";
+import {SCENARIOS} from "./components/utils/Scenarios.js";
 
 export default function App() {
   const [processes, setProcesses] = useState([
@@ -28,7 +28,6 @@ export default function App() {
     result.srtf.timeline.at(-1)?.end ?? 0
   ) : 0;
 
-  // Process management
   const addProcess = () => {
     const nextNum = processes.length + 1;
     setProcesses(prev => [...prev, { id: `P${nextNum}`, arrival: 0, burst: 1, priority: 1 }]);
@@ -44,7 +43,7 @@ export default function App() {
     });
   };
 
-  // Scenario loading
+
   const loadScenario = (key) => {
     setProcesses(SCENARIOS[key].processes);
     setResult(null);
@@ -61,7 +60,7 @@ export default function App() {
     setResult(null);
   };
 
-  // Simulation
+
   const simulate = async () => {
     setError("");
     setLoading(true);
