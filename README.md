@@ -15,13 +15,13 @@ scheduler/
 │   │   ├── utils/
 │   │   │   │  ├── colors.js            # Color palette helper
 │   │   │   │  └── scenarios.js         # Scenario datasets
-│   │   │   ├── Header.jsx           # Page header with priority rule
+│   │   │   ├── header.jsx           # Page header with priority rule
 │   │   │   ├── ScenarioBar.jsx      # Load preset scenarios
 │   │   │   ├── InputPanel.jsx       # Process input & management
-│   │   │   ├── GanttChart.jsx       # Visual timeline
-│   │   │   ├── ResultsTable.jsx     # Process metrics table
+│   │   │   ├── Gantt.jsx       # Visual timeline
+│   │   │   ├── Table.jsx     # Process metrics table
 │   │   │   ├── ResultsPanel.jsx     # Tabs + Gantt + Table
-│   │   │   └── ComparisonSummary.jsx # Analysis & conclusion
+│   │   │   └── Summary.jsx # Analysis & conclusion
 │   │   │
 │   │   ├── App.jsx                  # Main component
 │   │   ├── index.css                # All styles
