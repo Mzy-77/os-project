@@ -8,7 +8,7 @@ A React + Node.js application comparing Priority Scheduling and Shortest Remaini
 scheduler/
 ├── backend/
 │   ├── index.js          # Express server with Priority & SRTF algorithms
-│   └── package.json
+│   
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -26,7 +26,8 @@ scheduler/
 │   │   ├── App.jsx                  # Main component
 │   │   ├── index.css                # All styles
 │   │   └── main.jsx                 # React entry point
-│   └── package.json
+│   │
+└── package.json
 ```
 
 ## Installation
@@ -34,9 +35,9 @@ scheduler/
 ### Backend
 
 ```bash
-cd backend
+
 npm install
-node index.js
+npm run ser
 ```
 Runs on **http://localhost:3001**
 
