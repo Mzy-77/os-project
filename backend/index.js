@@ -1,173 +1,236 @@
 const express = require("express");
 const cors = require("cors");
 
-const application = express();
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-application.use(cors());
-application.use(express.json());
+function validateProcesses(processList) {
+    if (!Array.isArray(processList) || processList.length === 0)
+        return "Process list must be a non-empty array.";
+    if (processList.length > 20)
+        return "Maximum 20 processes allowed.";
+
+    const ids = new Set();
+    for (let p of processList) {
+        if (p.id === undefined || p.id === null || String(p.id).trim() === "")
+            return "Each process must have a valid ID.";
+        if (ids.has(p.id)) return `Duplicate process ID: ${p.id}`;
+        ids.add(p.id);
+        if (typeof p.arrival !== "number" || p.arrival < 0 || !Number.isInteger(p.arrival))
+            return `Process ${p.id}: Arrival time must be a non-negative integer.`;
+        if (typeof p.burst !== "number" || p.burst <= 0 || !Number.isInteger(p.burst))
+            return `Process ${p.id}: Burst time must be a positive integer.`;
+        if (typeof p.priority !== "number" || p.priority < 1 || !Number.isInteger(p.priority))
+            return `Process ${p.id}: Priority must be a positive integer (1 = highest).`;
+    }
+    return null;
+}
 
 function priorityScheduling(processList) {
-    const totalProcesses = processList.length;
-
-    let currentTime = 0;
-    let completed = 0;
-    let timeline = [];
-
-    let processes = processList.map((p) => ({
+    const processes = processList.map(p => ({
         ...p,
         remaining: p.burst,
-        start: -1,
+        firstStart: -1,
         finish: 0
     }));
 
-    while (completed < totalProcesses) {
+    let time = 0;
+    let completed = 0;
+    const total = processes.length;
+    const timeline = []; // { id, start, end }
+    let lastId = null;
+    let segStart = 0;
 
-        let available = processes.filter(
-            (p) => p.arrival <= currentTime && p.remaining > 0
-        );
+    while (completed < total) {
+        const available = processes.filter(p => p.arrival <= time && p.remaining > 0);
 
         if (available.length === 0) {
-            currentTime++;
+            if (lastId !== null) {
+                timeline.push({ id: lastId, start: segStart, end: time });
+                lastId = null;
+            }
+            time++;
+            segStart = time;
             continue;
         }
 
-        available.sort((a, b) => {
-            if (a.priority === b.priority) {
-                return a.arrival - b.arrival;
-            }
-            return a.priority - b.priority;
-        });
+        // Sort: lower priority number = higher priority; tie → earlier arrival
+        available.sort((a, b) =>
+            a.priority !== b.priority ? a.priority - b.priority : a.arrival - b.arrival
+        );
 
-        let current = available[0];
+        const current = available[0];
 
-        if (current.start === -1) {
-            current.start = currentTime;
+        if (current.firstStart === -1) current.firstStart = time;
+
+        // Detect preemption (context switch)
+        if (lastId !== current.id) {
+            if (lastId !== null) timeline.push({ id: lastId, start: segStart, end: time });
+            segStart = time;
+            lastId = current.id;
         }
 
-        timeline.push(current.id);
-
         current.remaining--;
-        currentTime++;
+        time++;
 
         if (current.remaining === 0) {
-            current.finish = currentTime;
+            current.finish = time;
             completed++;
         }
     }
 
-    let results = processes.map((p) => {
-        let turnaround = p.finish - p.arrival;
-        let waiting = turnaround - p.burst;
-        let response = p.start - p.arrival;
+    if (lastId !== null) timeline.push({ id: lastId, start: segStart, end: time });
 
-        return {
-            id: p.id,
-            arrival: p.arrival,
-            burst: p.burst,
-            priority: p.priority,
-            start: p.start,
-            finish: p.finish,
-            turnaround,
-            waiting,
-            response
-        };
+    const results = processes.map(p => {
+        const turnaround = p.finish - p.arrival;
+        const waiting = turnaround - p.burst;
+        const response = p.firstStart - p.arrival;
+        return { id: p.id, arrival: p.arrival, burst: p.burst, priority: p.priority, finish: p.finish, turnaround, waiting, response };
     });
 
-    return { timeline, results };
+    const avgWT = results.reduce((s, r) => s + r.waiting, 0) / results.length;
+    const avgTAT = results.reduce((s, r) => s + r.turnaround, 0) / results.length;
+    const avgRT = results.reduce((s, r) => s + r.response, 0) / results.length;
+
+    // Detect preemption events for annotation
+    const preemptions = [];
+    for (let i = 1; i < timeline.length; i++) {
+        if (timeline[i].id !== timeline[i - 1].id) {
+            preemptions.push({ at: timeline[i].start, preempted: timeline[i - 1].id, by: timeline[i].id });
+        }
+    }
+
+    return { timeline, results, avgWT, avgTAT, avgRT, preemptions };
 }
+
 
 function srtf(processList) {
-    const totalProcesses = processList.length;
-
-    let currentTime = 0;
-    let completed = 0;
-    let timeline = [];
-
-    let processes = processList.map((p) => ({
+    const processes = processList.map(p => ({
         ...p,
         remaining: p.burst,
-        start: -1,
+        firstStart: -1,
         finish: 0
     }));
 
-    while (completed < totalProcesses) {
+    let time = 0;
+    let completed = 0;
+    const total = processes.length;
+    const timeline = [];
+    let lastId = null;
+    let segStart = 0;
 
-        let available = processes.filter(
-            (p) => p.arrival <= currentTime && p.remaining > 0
-        );
+    while (completed < total) {
+        const available = processes.filter(p => p.arrival <= time && p.remaining > 0);
 
         if (available.length === 0) {
-            currentTime++;
+            if (lastId !== null) {
+                timeline.push({ id: lastId, start: segStart, end: time });
+                lastId = null;
+            }
+            time++;
+            segStart = time;
             continue;
         }
 
-        available.sort((a, b) => a.remaining - b.remaining);
 
-        let current = available[0];
+        available.sort((a, b) =>
+            a.remaining !== b.remaining ? a.remaining - b.remaining : a.arrival - b.arrival
+        );
 
-        if (current.start === -1) {
-            current.start = currentTime;
+        const current = available[0];
+        if (current.firstStart === -1) current.firstStart = time;
+
+        if (lastId !== current.id) {
+            if (lastId !== null) timeline.push({ id: lastId, start: segStart, end: time });
+            segStart = time;
+            lastId = current.id;
         }
 
-        timeline.push(current.id);
-
         current.remaining--;
-        currentTime++;
+        time++;
 
         if (current.remaining === 0) {
-            current.finish = currentTime;
+            current.finish = time;
             completed++;
         }
     }
 
-    let results = processes.map((p) => {
-        let turnaround = p.finish - p.arrival;
-        let waiting = turnaround - p.burst;
-        let response = p.start - p.arrival;
+    if (lastId !== null) timeline.push({ id: lastId, start: segStart, end: time });
 
-        return {
-            id: p.id,
-            arrival: p.arrival,
-            burst: p.burst,
-            start: p.start,
-            finish: p.finish,
-            turnaround,
-            waiting,
-            response
-        };
+    const results = processes.map(p => {
+        const turnaround = p.finish - p.arrival;
+        const waiting = turnaround - p.burst;
+        const response = p.firstStart - p.arrival;
+        return { id: p.id, arrival: p.arrival, burst: p.burst, priority: p.priority, finish: p.finish, turnaround, waiting, response };
     });
 
-    return { timeline, results };
-}
+    const avgWT = results.reduce((s, r) => s + r.waiting, 0) / results.length;
+    const avgTAT = results.reduce((s, r) => s + r.turnaround, 0) / results.length;
+    const avgRT = results.reduce((s, r) => s + r.response, 0) / results.length;
 
-application.post("/simulate", (req, res) => {
-
-    const processList = req.body.processes;
-
-    if (!Array.isArray(processList)) {
-        return res.status(400).json({ error: "Invalid input" });
-    }
-
-    for (let p of processList) {
-        if (p.arrival < 0 || p.burst <= 0 || p.priority < 1) {
-            return res.status(400).json({ error: "Invalid process data" });
+    const preemptions = [];
+    for (let i = 1; i < timeline.length; i++) {
+        if (timeline[i].id !== timeline[i - 1].id) {
+            preemptions.push({ at: timeline[i].start, preempted: timeline[i - 1].id, by: timeline[i].id });
         }
     }
 
-    const priorityResult = priorityScheduling(
-        JSON.parse(JSON.stringify(processList))
-    );
+    return { timeline, results, avgWT, avgTAT, avgRT, preemptions };
+}
 
-    const srtfResult = srtf(
-        JSON.parse(JSON.stringify(processList))
-    );
+app.post("/simulate", (req, res) => {
+    const { processes } = req.body;
+    const error = validateProcesses(processes);
+    if (error) return res.status(400).json({ error });
 
+    const priorityResult = priorityScheduling(JSON.parse(JSON.stringify(processes)));
+    const srtfResult = srtf(JSON.parse(JSON.stringify(processes)));
+
+    res.json({ priority: priorityResult, srtf: srtfResult });
+});
+
+app.get("/scenarios", (req, res) => {
     res.json({
-        priority: priorityResult,
-        srtf: srtfResult
+        A: {
+            name: "Scenario A — Basic Mixed Workload",
+            description: "Normal workload with different arrival times, burst times, and priorities.",
+            processes: [
+                { id: "P1", arrival: 0, burst: 6, priority: 3 },
+                { id: "P2", arrival: 2, burst: 4, priority: 1 },
+                { id: "P3", arrival: 4, burst: 2, priority: 4 },
+                { id: "P4", arrival: 6, burst: 5, priority: 2 }
+            ]
+        },
+        B: {
+            name: "Scenario B — Priority vs Burst Conflict",
+            description: "High-priority long process vs low-priority short processes. The two algorithms behave very differently.",
+            processes: [
+                { id: "P1", arrival: 0, burst: 10, priority: 1 },
+                { id: "P2", arrival: 1, burst: 2, priority: 4 },
+                { id: "P3", arrival: 2, burst: 1, priority: 5 },
+                { id: "P4", arrival: 3, burst: 3, priority: 3 }
+            ]
+        },
+        C: {
+            name: "Scenario C — Starvation Risk",
+            description: "A low-priority process may starve while higher-priority processes keep arriving.",
+            processes: [
+                { id: "P1", arrival: 0, burst: 3, priority: 1 },
+                { id: "P2", arrival: 1, burst: 3, priority: 1 },
+                { id: "P3", arrival: 2, burst: 3, priority: 1 },
+                { id: "P4", arrival: 0, burst: 8, priority: 5 }
+            ]
+        },
+        D: {
+            name: "Scenario D — Validation Case (Invalid Input)",
+            description: "Contains intentionally invalid data to test input validation.",
+            processes: [
+                { id: "P1", arrival: -1, burst: 5, priority: 2 },
+                { id: "P2", arrival: 0, burst: 0, priority: 1 }
+            ]
+        }
     });
 });
 
-application.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
+app.listen(3001, () => console.log("Scheduler backend running on port 3001"));
