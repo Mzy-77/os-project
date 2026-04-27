@@ -5,7 +5,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ─── Validation ────────────────────────────────────────────────────────────
+// Validation
 function validateProcesses(processList) {
     if (!Array.isArray(processList) || processList.length === 0)
         return "Process list must be a non-empty array.";
@@ -28,7 +28,7 @@ function validateProcesses(processList) {
     return null;
 }
 
-// ─── Preemptive Priority Scheduling ────────────────────────────────────────
+// Preemptive Priority Scheduling
 // Rule: Lower number = higher priority. Ties broken by arrival time (FCFS).
 function priorityScheduling(processList) {
     const processes = processList.map(p => ({
@@ -107,7 +107,7 @@ function priorityScheduling(processList) {
     return { timeline, results, avgWT, avgTAT, avgRT, preemptions };
 }
 
-// ─── SRTF (Shortest Remaining Time First) ──────────────────────────────────
+//  SRTF (Shortest Remaining Time First)
 // Preempts immediately when a shorter remaining job arrives.
 function srtf(processList) {
     const processes = processList.map(p => ({
@@ -183,7 +183,7 @@ function srtf(processList) {
     return { timeline, results, avgWT, avgTAT, avgRT, preemptions };
 }
 
-// ─── Routes ─────────────────────────────────────────────────────────────────
+// Routes
 app.post("/simulate", (req, res) => {
     const { processes } = req.body;
     const error = validateProcesses(processes);
