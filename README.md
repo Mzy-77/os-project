@@ -54,7 +54,7 @@ A React + Node.js application comparing Priority Scheduling and Shortest Remaini
 
 **Average RT = $(0 + 0 + 11 + 0) / 4 = 11 / 4 = 2.75$**
 
-![alt text](blob:https://markdownviewer.pages.dev/9ef5d7b0-1012-4e5e-b4ec-c18a95a3f29c)
+<img width="1320" height="808" alt="Screenshot from 2026-05-09 15-56-25" src="https://github.com/user-attachments/assets/95ce21a0-ff14-4a91-92ef-5107449ad3f9" />
 
 ---
 
@@ -84,16 +84,15 @@ A React + Node.js application comparing Priority Scheduling and Shortest Remaini
 
 **Average RT = $(0 + 6 + 2 + 6) / 4 = 14 / 4 = 3.50$**
 
-![alt text](blob:https://markdownviewer.pages.dev/8cc87bf8-3a07-4c3d-b0ad-f8ac2b73dec0)
+<img width="1320" height="808" alt="Screenshot from 2026-05-09 16-11-01" src="https://github.com/user-attachments/assets/3c0ba886-772a-4d83-9525-b2c884b60c88" />
 
 #### Comparison Summary
 
-![alt text](blob:https://markdownviewer.pages.dev/c86dfdd4-0aa4-43a7-9415-9ad3c5c3b7e6)
+<img width="1269" height="740" alt="Screenshot from 2026-05-09 17-20-07" src="https://github.com/user-attachments/assets/ee61b254-ab66-4d83-b1f6-94af1267c5d0" />
 
 #### Conclusion
 
-![alt text](blob:https://markdownviewer.pages.dev/a1422aeb-affa-460e-b3fe-b347b3c9a129)
-
+<img width="1269" height="589" alt="Screenshot from 2026-05-09 17-20-43" src="https://github.com/user-attachments/assets/bd09f908-733c-4bfc-a25e-2eb130e4cea0" />
 
 ---
 
@@ -131,7 +130,7 @@ P4: $10 - 3 - 0 = 7$
 
 **Average RT = $(0 + 12 + 13 + 7) / 4 = 32 / 4 = 8.00$**
 
-![alt text](blob:https://markdownviewer.pages.dev/b80a1602-512e-415b-8e0b-2f84621879b7)
+<img width="1320" height="808" alt="Screenshot from 2026-05-09 16-36-14" src="https://github.com/user-attachments/assets/2d3f3dcf-902d-41e1-ba99-456ff88f83e3" />
 
 ---
 
@@ -161,15 +160,15 @@ P4: $10 - 3 - 0 = 7$
 
 **Average RT = $(0 + 0 + 1 + 1) / 4 = 2 / 4 = 0.50$**
 
-![alt text](blob:https://markdownviewer.pages.dev/35e04b19-e848-4b80-85b4-fb0f2020bf58)
+<img width="1324" height="812" alt="Screenshot from 2026-05-09 16-58-03" src="https://github.com/user-attachments/assets/7ac8fb09-c7d5-4600-8786-859de8e1fb9c" />
 
 #### Comparison Summary
 
- ![alt text](blob:https://markdownviewer.pages.dev/027dcae1-1640-44ea-b7ab-08f7a97a91bd)
+<img width="1270" height="741" alt="Screenshot from 2026-05-09 17-18-09" src="https://github.com/user-attachments/assets/8a2c13f2-6828-4363-9f04-d1d432b49d97" />
 
 #### Conclusion
 
-![alt text](blob:https://markdownviewer.pages.dev/a6825c71-aeab-4ded-a92e-eb6c3f8a1705)
+<img width="1270" height="591" alt="Screenshot from 2026-05-09 17-18-51" src="https://github.com/user-attachments/assets/849fff33-4654-4e8a-a152-4413a3cb2648" />
 
 ---
 
@@ -207,7 +206,7 @@ P4: $10 - 3 - 0 = 7$
 
 **Average RT = $(0 + 2 + 4 + 9) / 4 = 15 / 4 = 3.75$**
 
-![alt text](blob:https://markdownviewer.pages.dev/5db44701-0d36-4f69-b35a-982804e195e5)
+<img width="1324" height="812" alt="Screenshot from 2026-05-09 17-00-44" src="https://github.com/user-attachments/assets/4771e7d0-b9c6-4dec-9755-62ad01004b2e" />
 
 ---
 
@@ -237,12 +236,12 @@ P4: $10 - 3 - 0 = 7$
 
 **Average RT = $(0 + 2 + 4 + 9) / 4 = 15 / 4 = 3.75$**
 
-![alt text](blob:https://markdownviewer.pages.dev/54cdf92e-e9f4-4950-b6ad-648255b95efe)
+<img width="1324" height="812" alt="Screenshot from 2026-05-09 17-00-57" src="https://github.com/user-attachments/assets/2194d0f8-6d30-47f9-b78d-640f02680921" />
 
 #### Comparison Summary
 
-![alt text](blob:https://markdownviewer.pages.dev/ed38d798-4020-4cf4-a750-cc7d374e2185) 
+<img width="1270" height="733" alt="Screenshot from 2026-05-09 17-14-48" src="https://github.com/user-attachments/assets/9a94a392-5004-4098-872b-bf7de3ccf470" />
 
 #### Conclusion
 
-![alt text](blob:https://markdownviewer.pages.dev/f8dc8a77-e454-4245-a948-196bd4cdb208)
+<img width="1270" height="582" alt="Screenshot from 2026-05-09 17-16-28" src="https://github.com/user-attachments/assets/ad238a27-2767-4674-8a4a-d88c265114a2" />
