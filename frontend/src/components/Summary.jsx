@@ -25,13 +25,14 @@ export default function ComparisonSummary({ data }) {
                 </thead>
                 <tbody>
                     {metrics.map((m, i) => {
-                        const priWins = m.priVal <= m.srtfVal;
+                        const priWins = m.priVal < m.srtfVal;
+                        const isTie   = m.priVal === m.srtfVal;
                         return (
                             <tr key={i}>
                                 <td className="td-metric">{m.label}</td>
-                                <td className={priWins ? "win" : "lose"}>{m.priVal.toFixed(2)}</td>
-                                <td className={!priWins ? "win" : "lose"}>{m.srtfVal.toFixed(2)}</td>
-                                <td className="td-winner">{priWins ? "Priority" : "SRTF"}</td>
+                                <td className={isTie ? "tie" : priWins ? "win" : "lose"}>{m.priVal.toFixed(2)}</td>
+                                <td className={isTie ? "tie" : !priWins ? "win" : "lose"}>{m.srtfVal.toFixed(2)}</td>
+                                <td className="td-winner">{isTie ? "Tie ⚖️" : priWins ? "Priority" : "SRTF"}</td>
                             </tr>
                         );
                     })}
