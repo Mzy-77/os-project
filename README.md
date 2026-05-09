@@ -31,7 +31,7 @@ A React + Node.js application comparing Priority Scheduling and Shortest Remaini
 
 #### 1. Priority Sheduling
 ##### Waiting Time (WT):
-P1: $(11 - 2) + (0 - 0) = 9$
+* P1: $(11 - 2) + (0 - 0) = 9$
 P2: $2 - 2 = 0$
 P3: $15 - 4 = 11$
 P4: $6 - 6 = 0$
