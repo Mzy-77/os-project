@@ -6,9 +6,9 @@ export default function ComparisonSummary({ data }) {
         { label: "Avg Response Time", priVal: pri.avgRT, srtfVal: srtf.avgRT },
     ];
 
-    const betterWT = pri.avgWT < srtf.avgWT ? "Priority" : srtf.avgWT < pri.avgWT ? "SRTF" : null;
-    const betterTAT = pri.avgTAT < srtf.avgTAT ? "Priority" : srtf.avgTAT < pri.avgTAT ? "SRTF" : null;
-    const betterRT = pri.avgRT < srtf.avgRT ? "Priority" : srtf.avgRT < pri.avgRT ? "SRTF" : null;
+    const betterWT  = pri.avgWT  < srtf.avgWT  ? "Priority" : srtf.avgWT  < pri.avgWT  ? "SRTF" : "Tie";
+    const betterTAT = pri.avgTAT < srtf.avgTAT ? "Priority" : srtf.avgTAT < pri.avgTAT ? "SRTF" : "Tie";
+    const betterRT  = pri.avgRT  < srtf.avgRT  ? "Priority" : srtf.avgRT  < pri.avgRT  ? "SRTF" : "Tie";
 
     return (
         <div className="summary">
@@ -42,10 +42,10 @@ export default function ComparisonSummary({ data }) {
             {/* Analysis Cards */}
             <div className="analysis-grid">
                 {[
-                    { q: "Lower avg waiting time?", a: pri.avgWT < srtf.avgWT ? "Priority Scheduling" : srtf.avgWT < pri.avgWT ? "SRTF" : "Tie" },
-                    { q: "Lower avg response time?", a: pri.avgRT < srtf.avgRT ? "Priority Scheduling" : srtf.avgRT < pri.avgRT ? "SRTF" : "Tie" },
+                    { q: "Lower avg waiting time?",           a: betterWT === "Tie" ? "Tie" : betterWT === "Priority" ? "Priority Scheduling" : "SRTF" },
+                    { q: "Lower avg response time?",          a: betterRT === "Tie" ? "Tie" : betterRT === "Priority" ? "Priority Scheduling" : "SRTF" },
                     { q: "Priority favored urgent processes?", a: pri.preemptions.length > 0 ? `Yes — ${pri.preemptions.length} preemption(s)` : "No preemptions" },
-                    { q: "SRTF favored short jobs?", a: srtf.avgWT < pri.avgWT ? `Yes — ${(pri.avgWT - srtf.avgWT).toFixed(2)} lower` : "Not here" },
+                    { q: "SRTF favored short jobs?",          a: srtf.avgWT < pri.avgWT ? `Yes — ${(pri.avgWT - srtf.avgWT).toFixed(2)} lower` : srtf.avgWT === pri.avgWT ? "Same as Priority" : "Not here" },
                 ].map((item, i) => (
                     <div key={i} className="analysis-card">
                         <p className="analysis-q">{item.q}</p>
@@ -58,8 +58,12 @@ export default function ComparisonSummary({ data }) {
             <div className="conclusion-box">
                 <h4 className="conclusion-title">CONCLUSION</h4>
                 <p className="conclusion-text">
-                    {betterWT && <><strong className="conclusion-strong">{betterWT}</strong> had lower waiting time. </>}
-                    {betterRT && <><strong className="conclusion-strong">{betterRT}</strong> had lower response time. </>}
+                    {betterWT === "Tie"
+                        ? <>Both algorithms had <strong className="conclusion-strong">equal waiting time</strong>. </>
+                        : <><strong className="conclusion-strong">{betterWT}</strong> had lower waiting time. </>}
+                    {betterRT === "Tie"
+                        ? <>Both algorithms had <strong className="conclusion-strong">equal response time</strong>. </>
+                        : <><strong className="conclusion-strong">{betterRT}</strong> had lower response time. </>}
                     Priority scheduling cares about urgency — high-priority jobs jump ahead. SRTF ignores priority and just picks whoever finishes fastest.
                     The tradeoff is between fairness to important processes vs minimizing average wait time.
                     Priority works better if you have critical processes, SRTF works better if you want overall efficiency.
